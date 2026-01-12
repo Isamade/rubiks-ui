@@ -87,3 +87,33 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+.btn-color-U {
+  background-color: #ffffff;
+  color: #000;
+}
+
+.btn-color-D {
+  background-color: #ffff00a3;
+  color: #000;
+}
+
+.btn-color-F {
+  background-color: #4caf4faf;
+  color: #fff;
+}
+
+.btn-color-B {
+  background-color: #2195f39e;
+  color: #fff;
+}
+
+.btn-color-L {
+  background-color: #ff8c00a5;
+  color: #fff;
+}
+
+.btn-color-R {
+  background-color: #ff0000a4;
+  color: #fff;
+}

@@ -40,3 +40,33 @@
 .read-the-docs {
   color: #888;
 }
+
+.btn-color-U {
+  background-color: #ffffff;
+  color: #000;
+}
+
+.btn-color-D {
+  background-color: #ffff00;
+  color: #000;
+}
+
+.btn-color-F {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.btn-color-B {
+  background-color: #2196f3;
+  color: #fff;
+}
+
+.btn-color-L {
+  background-color: #ff8c00;
+  color: #fff;
+}
+
+.btn-color-R {
+  background-color: #ff0000;
+  color: #fff;
+}

@@ -1,22 +1,38 @@
 import { useState } from 'react';
-import { postData, MyPayload } from '../lib/api';
+import { initiateRotation, initiateScramble, RotationPayload, ScramblePayload } from '../lib/api';
 
 export function usePostData() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [loadingRotation, setLoadingRotation] = useState(false);
+  const [rotationError, setRotationError] = useState<Error | null>(null);
 
-  const send = async (payload: MyPayload) => {
-    setLoading(true); setError(null);
+  const [loadingScramble, setLoadingScramble] = useState(false);
+  const [scrambleError, setScrambleError] = useState<Error | null>(null);
+
+  const rotate = async (payload: RotationPayload) => {
+    setLoadingRotation(true); setRotationError(null);
     try {
-      const result = await postData(payload);
+      const result = await initiateRotation(payload);
       return result;
     } catch (e) {
-      setError(e as Error);
+      setRotationError(e as Error);
       throw e;
     } finally {
-      setLoading(false);
+      setLoadingRotation(false);
     }
   };
 
-  return { send, loading, error };
+  const scramble = async (payload: ScramblePayload) => {
+    setLoadingScramble(true); setScrambleError(null);
+    try {
+      const result = await initiateScramble(payload);
+      return result;
+    } catch (e) {
+      setScrambleError(e as Error);
+      throw e;
+    } finally {
+      setLoadingScramble(false);
+    }
+  };
+
+  return { rotate, loadingRotation, rotationError, scramble, loadingScramble, scrambleError };
 }

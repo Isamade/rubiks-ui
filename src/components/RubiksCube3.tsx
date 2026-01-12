@@ -62,12 +62,18 @@ const createSolvedCube = (): CubeState => {
   
   // Classic Rubik's cube colors
   const faceColors = {
-    front: "#ffffff",  // white
-    back: "#ffff00",   // yellow
-    top: "#ff5722",    // orange/red
-    bottom: "#ff0000", // red
-    right: "#4caf50",  // green
-    left: "#2196f3",   // blue
+    //front: "#ffffff",  // white
+    //back: "#ffff00",   // yellow
+    //top: "#ff8c00",    // orange/red
+    //bottom: "#ff0000", // red
+    //right: "#2196f3",  // blue
+    //left: "#4caf50",   // green
+    top: "#ffffff",    // white
+    bottom: "#ffff00", // yellow
+    front: "#4caf50",  // green
+    back: "#2196f3",   // blue
+    right: "#ff0000",  // red
+    left: "#ff8c00",   // orange
   };
 
   for (let x of positions) {
@@ -131,27 +137,38 @@ const scrambleCube = (cubeState: CubeState): CubeState => {
 
 export const RubiksCube = () => {
   const [cubeState, setCubeState] = useState<CubeState>(createSolvedCube());
-  const { send, loading, error } = usePostData();
+  const { rotate, loadingRotation, rotationError, scramble, loadingScramble, scrambleError } = usePostData();
   const groupRef = useRef<THREE.Group>(null);
 
-  const handleScramble = () => {
-    setCubeState(scrambleCube(cubeState));
-  };
-
   const handleReset = () => {
-    setCubeState(createSolvedCube());
+    const solvedCube = createSolvedCube();
+    console.log("Reset Cube State:", solvedCube);
+    setCubeState(solvedCube);
   };
 
   const handleRotate = async (move: string) => {
-    if (loading) return; // Prevent multiple simultaneous requests
+    if (loadingRotation) return; // Prevent multiple simultaneous requests
     try {
-      const res = await send({ cubeState, move });
-      if (error) { throw error; }
-      setCubeState(res.cubeState);
+      const rotated = await rotate({ cubeState, move });
+      if (rotationError) { throw rotationError; }
+      console.log("Rotation result:", rotated);
+      setCubeState(rotated);
     } catch (e) {
       console.error("Error rotating cube:", e);
     }
   }
+
+  const handleScramble = async () => {
+    if (loadingScramble) return; // Prevent multiple simultaneous requests
+    try {
+      const scrambled = await scramble({ cubeState, movesCount: 20 });
+      if (scrambleError) { throw scrambleError; }
+      console.log("Scrambled Cube State:", scrambled);
+      setCubeState(scrambled);
+    } catch (e) {
+      console.error("Error scrambling cube:", e);
+    }
+  };
 
   return (
     <div className="relative w-full h-screen">
@@ -177,14 +194,14 @@ export const RubiksCube = () => {
 
         {/* Move buttons on the right side */}
         <div className="absolute right-8 top-1/2 transform -translate-y-1/2 grid grid-cols-2 gap-2">
-          {["U", "U'", "D", "D'", "L", "L'", "R", "R'", "F", "F'", "B", "B'"].map((move) => (
+          {["U", "U'", "D", "D'", "R", "R'", "L", "L'", "F", "F'", "B", "B'"].map((move) => (
             <button
             key={move}
             onClick={() => handleRotate(move)}
-            disabled={loading}
-            className="w-12 h-12 bg-secondary text-secondary-foreground rounded-lg font-bold hover:bg-secondary/80 transition-all shadow-lg hover:shadow-xl text-sm"
+            disabled={loadingRotation}
+            className={`w-12 h-12 text-secondary-foreground rounded-lg font-bold hover:bg-secondary/80 transition-all shadow-lg hover:shadow-xl text-sm btn-color-${move.charAt(0)}`}
             >
-            {loading ? "X" : move}
+            {loadingRotation ? "X" : move}
             </button>
           ))}
         </div>
