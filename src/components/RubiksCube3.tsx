@@ -68,10 +68,10 @@ const createSolvedCube = (): CubeState => {
     //bottom: "#ff0000", // red
     //right: "#2196f3",  // blue
     //left: "#4caf50",   // green
-    top: "#ffffff",    // white
-    bottom: "#ffff00", // yellow
-    front: "#4caf50",  // green
-    back: "#2196f3",   // blue
+    top: "#ffff00",    // white
+    bottom: "#ffffff", // yellow
+    front: "#2196f3",  // green
+    back: "#4caf50",   // blue
     right: "#ff0000",  // red
     left: "#ff8c00",   // orange
   };

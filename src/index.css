@@ -88,22 +88,22 @@ All colors MUST be HSL.
   }
 }
 
-.btn-color-U {
+.btn-color-D {
   background-color: #ffffff;
   color: #000;
 }
 
-.btn-color-D {
+.btn-color-U {
   background-color: #ffff00a3;
   color: #000;
 }
 
-.btn-color-F {
+.btn-color-B {
   background-color: #4caf4faf;
   color: #fff;
 }
 
-.btn-color-B {
+.btn-color-F {
   background-color: #2195f39e;
   color: #fff;
 }
