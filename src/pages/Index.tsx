@@ -1,5 +1,5 @@
 //import CubeScene from '@/components/CubeScene';
-import { RubiksCube } from "@/components/RubiksCube3";
+import { RubiksCube } from "@/components/RubiksCube";
 
 const Index = () => {
   return (
