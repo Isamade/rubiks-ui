@@ -1,0 +1,26 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    image: rubiks-ui-app-builder
+    working_dir: /app
+    command: sh -c "npm run build"
+    volumes:
+      - dist:/app/dist
+    restart: "no"
+
+  nginx:
+    image: nginx:1.29-bookworm
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+    volumes:
+      - dist:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+
+volumes:
+  dist: {}

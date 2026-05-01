@@ -1,0 +1,26 @@
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.DS_Store
+dist
+build
+.vite
+.idea
+.vscode
+.git
+.gitignore
+*.md
+*.log
+coverage
+**/test-results
+.env
+.env.*
+
+# Optional local env/config files
+local.env
+*.local
+
+# Ignore Yarn and npm lockfiles only if not needed in build context
+# (keep lockfiles if you want reproducible installs)
