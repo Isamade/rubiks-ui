@@ -30,7 +30,7 @@ pipeline {
             steps {
                 echo "Starting the new container..."
                 // Runs the newly built image on the DinD engine
-                sh "docker run -d --name ${APP_NAME} -p 8080:80 ${IMAGE_NAME}"
+                sh "docker run -d --name ${APP_NAME} -p 9000:80 ${IMAGE_NAME}"
             }
         }
 
