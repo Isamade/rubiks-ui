@@ -15,13 +15,14 @@ export interface ScramblePayload {
   cubeState: CubeState;
 }
 
-const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:9000';
+//const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:9000';
+const BASE_URL = 'http://localhost:9000';
 
 export async function initiateRotation(payload: RotationPayload) {
     console.log("Posting data:", payload);
     const data = JSON.stringify(payload);
     console.log("Serialized data:", data);
-  const res = await fetch(`${BASE_URL}/rotate`, {
+  const res = await fetch(`${BASE_URL}/api/rotate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: data,
@@ -34,7 +35,7 @@ export async function initiateScramble(payload: ScramblePayload) {
     console.log("Posting data for scramble:", payload);
     const data = JSON.stringify(payload);
     console.log("Serialized scramble data:", data);
-  const res = await fetch(`${BASE_URL}/scramble`, {
+  const res = await fetch(`${BASE_URL}/api/scramble`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: data,
