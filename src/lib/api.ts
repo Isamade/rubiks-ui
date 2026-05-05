@@ -15,8 +15,8 @@ export interface ScramblePayload {
   cubeState: CubeState;
 }
 
-//const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:9000';
-const BASE_URL = 'http://localhost:9000';
+const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:9000';
+//const BASE_URL = 'http://localhost:9000';
 
 export async function initiateRotation(payload: RotationPayload) {
     console.log("Posting data:", payload);
