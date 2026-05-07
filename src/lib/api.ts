@@ -1,4 +1,4 @@
-interface CubeState {
+export interface CubeState {
   pieces: Array<{
     position: [number, number, number];
     colors: string[];
@@ -23,6 +23,17 @@ export async function initiateRotation(payload: RotationPayload) {
     const data = JSON.stringify(payload);
     console.log("Serialized data:", data);
   const res = await fetch(`${BASE_URL}/api/rotate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: data,
+  });
+  if (!res.ok) throw new Error('Request failed');
+  return res.json();
+}
+
+export async function initiateSolve(payload: { cubeState: CubeState }) {
+  const data = JSON.stringify(payload);
+  const res = await fetch(`${BASE_URL}/api/solve`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: data,

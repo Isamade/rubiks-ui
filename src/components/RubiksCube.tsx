@@ -137,7 +137,7 @@ const scrambleCube = (cubeState: CubeState): CubeState => {
 
 export const RubiksCube = () => {
   const [cubeState, setCubeState] = useState<CubeState>(createSolvedCube());
-  const { rotate, loadingRotation, rotationError, scramble, loadingScramble, scrambleError } = usePostData();
+  const { rotate, loadingRotation, rotationError, scramble, loadingScramble, scrambleError, solve, loadingSolve, solveError } = usePostData();
   const groupRef = useRef<THREE.Group>(null);
 
   const handleReset = () => {
@@ -167,6 +167,29 @@ export const RubiksCube = () => {
       setCubeState(scrambled);
     } catch (e) {
       console.error("Error scrambling cube:", e);
+    }
+  };
+
+  const handleSolve = async () => {
+    if (loadingSolve) return;
+    try {
+      const result = await solve(cubeState);
+      if (solveError) { throw solveError; }
+      console.log("Solve result:", result);
+      
+      if (result.moves && result.moves.length > 0) {
+        // Execute moves one by one
+        let currentState = cubeState;
+        for (const move of result.moves) {
+          const rotated = await rotate({ cubeState: currentState, move });
+          setCubeState(rotated);
+          currentState = rotated;
+          // Small delay between moves for visual effect
+          await new Promise(resolve => setTimeout(resolve, 300));
+        }
+      }
+    } catch (e) {
+      console.error("Error solving cube:", e);
     }
   };
 
@@ -209,13 +232,22 @@ export const RubiksCube = () => {
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-4">
         <button
           onClick={handleScramble}
-          className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:opacity-90 transition-all shadow-lg hover:shadow-xl"
+          disabled={loadingScramble || loadingSolve}
+          className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:opacity-90 transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
         >
-          Scramble
+          {loadingScramble ? "Scrambling..." : "Scramble"}
+        </button>
+        <button
+          onClick={handleSolve}
+          disabled={loadingSolve || loadingScramble}
+          className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
+        >
+          {loadingSolve ? "Solving..." : "Solve"}
         </button>
         <button
           onClick={handleReset}
-          className="px-6 py-3 bg-secondary text-secondary-foreground rounded-lg font-semibold hover:opacity-90 transition-all shadow-lg hover:shadow-xl"
+          disabled={loadingSolve || loadingScramble}
+          className="px-6 py-3 bg-secondary text-secondary-foreground rounded-lg font-semibold hover:opacity-90 transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
         >
           Reset
         </button>
