@@ -137,13 +137,15 @@ const scrambleCube = (cubeState: CubeState): CubeState => {
 
 export const RubiksCube = () => {
   const [cubeState, setCubeState] = useState<CubeState>(createSolvedCube());
-  const { rotate, loadingRotation, rotationError, scramble, loadingScramble, scrambleError, solve, loadingSolve, solveError } = usePostData();
+  const [lastSolve, setLastSolve] = useState<{ initialState: CubeState, moves: string[] } | null>(null);
+  const { rotate, loadingRotation, rotationError, scramble, loadingScramble, scrambleError, solve, loadingSolve, solveError, saveSolution, loadingSave, saveError } = usePostData();
   const groupRef = useRef<THREE.Group>(null);
 
   const handleReset = () => {
     const solvedCube = createSolvedCube();
     console.log("Reset Cube State:", solvedCube);
     setCubeState(solvedCube);
+    setLastSolve(null);
   };
 
   const handleRotate = async (move: string) => {
@@ -178,6 +180,7 @@ export const RubiksCube = () => {
       console.log("Solve result:", result);
       
       if (result.moves && result.moves.length > 0) {
+        setLastSolve({ initialState: cubeState, moves: result.moves });
         // Execute moves one by one
         let currentState = cubeState;
         for (const move of result.moves) {
@@ -190,6 +193,17 @@ export const RubiksCube = () => {
       }
     } catch (e) {
       console.error("Error solving cube:", e);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!lastSolve || loadingSave) return;
+    try {
+      await saveSolution(lastSolve);
+      alert("Solution saved successfully!");
+      setLastSolve(null); // Clear after saving
+    } catch (e) {
+      console.error("Error saving solution:", e);
     }
   };
 
@@ -251,6 +265,15 @@ export const RubiksCube = () => {
         >
           Reset
         </button>
+        {lastSolve && (
+          <button
+            onClick={handleSave}
+            disabled={loadingSave}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 animate-pulse"
+          >
+            {loadingSave ? "Saving..." : "Save Solution"}
+          </button>
+        )}
       </div>
 
       <div className="absolute top-8 left-1/2 transform -translate-x-1/2 text-center">

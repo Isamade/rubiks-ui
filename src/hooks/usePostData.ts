@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { initiateRotation, initiateScramble, initiateSolve, RotationPayload, ScramblePayload, CubeState } from '../lib/api';
+import { initiateRotation, initiateScramble, initiateSolve, initiateSaveSolution, RotationPayload, ScramblePayload, SaveSolutionPayload, CubeState } from '../lib/api';
 
 export function usePostData() {
   const [loadingRotation, setLoadingRotation] = useState(false);
@@ -10,6 +10,9 @@ export function usePostData() {
 
   const [loadingSolve, setLoadingSolve] = useState(false);
   const [solveError, setSolveError] = useState<Error | null>(null);
+
+  const [loadingSave, setLoadingSave] = useState(false);
+  const [saveError, setSaveError] = useState<Error | null>(null);
 
   const rotate = async (payload: RotationPayload) => {
     setLoadingRotation(true); setRotationError(null);
@@ -50,5 +53,18 @@ export function usePostData() {
     }
   };
 
-  return { rotate, loadingRotation, rotationError, scramble, loadingScramble, scrambleError, solve, loadingSolve, solveError };
+  const saveSolution = async (payload: SaveSolutionPayload) => {
+    setLoadingSave(true); setSaveError(null);
+    try {
+      const result = await initiateSaveSolution(payload);
+      return result;
+    } catch (e) {
+      setSaveError(e as Error);
+      throw e;
+    } finally {
+      setLoadingSave(false);
+    }
+  };
+
+  return { rotate, loadingRotation, rotationError, scramble, loadingScramble, scrambleError, solve, loadingSolve, solveError, saveSolution, loadingSave, saveError };
 }
